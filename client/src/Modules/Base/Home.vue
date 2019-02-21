@@ -3,26 +3,29 @@
     <img src="~/assets/logo.png">
     <h1>Client</h1>
     <p class="home">Client</p>
+
+    <button @click="communication">通知Master</button>
   </div>
 </template>
 
 <script lang="babel" type="text/babel">
+import AcrossTabs from 'across-tabs'
 export default {
-  async created() {
-    console.warn('create')
-    const result = await this.foo()
-    console.warn(result)
+  data() {
+    return {
+      child: null,
+    }
+  },
+  created() {
+    // child
+    this.child = new AcrossTabs.Child({
+
+    })
   },
   methods: {
-    async wait(ms) {
-      return new Promise(resolve => {
-        setTimeout(() => resolve() , ms)
-      })
-    },
-    async foo() {
-      await this.wait(2000)
-      return { foo: 'bar' }
-    },
+    communication() {
+      this.child.sendMessageToParent({ action: 'someAction' })
+    }
   },
 }
 </script>

@@ -3,26 +3,34 @@
     <img src="~/assets/logo.png">
     <h1>Master</h1>
     <p class="home">Master</p>
+
+    <button @click="openNewTab">開新分頁(Child)</button>
   </div>
 </template>
 
 <script lang="babel" type="text/babel">
+import AcrossTabs from 'across-tabs'
 export default {
-  async created() {
-    console.warn('create')
-    const result = await this.foo()
-    console.warn(result)
+  data() {
+    return {
+      parent: null,
+    }
+  },
+  created() {
+    // parent
+    this.parent = new AcrossTabs.Parent({
+      onHandshakeCallback: () => {
+        console.warn('建立通訊完成')
+      },
+      onChildCommunication: (data) => {
+        console.warn('child呼叫master', data)
+      },
+    })
   },
   methods: {
-    async wait(ms) {
-      return new Promise(resolve => {
-        setTimeout(() => resolve() , ms)
-      })
-    },
-    async foo() {
-      await this.wait(2000)
-      return { foo: 'bar' }
-    },
+    openNewTab() {
+      this.parent.openNewTab({url: 'http://localhost:8081', windowName: 'AcrossTab'})
+    }
   },
 }
 </script>
